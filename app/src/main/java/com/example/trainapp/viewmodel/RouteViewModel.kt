@@ -3,6 +3,8 @@ package com.example.trainapp.viewmodel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
+import com.example.trainapp.api.RouteApi
+import com.example.trainapp.api.RouteApiService
 import com.example.trainapp.api.TripRepository
 import com.example.trainapp.database.RouteRepository
 import com.example.trainapp.model.Route
@@ -14,12 +16,16 @@ class RouteViewModel (application: Application) : AndroidViewModel(application) 
 
     private val ioScope = CoroutineScope(Dispatchers.IO)
     private val routeRepository = RouteRepository(application.applicationContext)
+    private val tripRepository = TripRepository()
 
-    /**
-     * This property points direct to the LiveData in the repository, that value
-     * get's updated when user clicks FAB. This happens through the getTriviaNumber() in this class :)
-     */
+    val stations = tripRepository.stations
+
     val routes: LiveData<List<Route>> = routeRepository.getAllRoutes()
+
+    private val _errorText: MutableLiveData<String> = MutableLiveData()
+
+    val errorText: LiveData<String>
+        get() = _errorText
 
     fun insertRoute(route: Route) {
         ioScope.launch {
@@ -30,6 +36,17 @@ class RouteViewModel (application: Application) : AndroidViewModel(application) 
     fun deleteRoute(route: Route) {
         ioScope.launch {
             routeRepository.deleteRoute(route)
+        }
+    }
+
+    fun getAllStations() {
+        viewModelScope.launch {
+            try {
+                tripRepository.getAllStations()
+            } catch (error: TripRepository.RouteError) {
+                _errorText.value = error.message
+                Log.e("Stations error", error.cause.toString())
+            }
         }
     }
 }

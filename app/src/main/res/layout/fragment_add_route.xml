@@ -9,6 +9,7 @@
     tools:context=".ui.AddRouteFragment">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -48,11 +49,12 @@
 
                 >
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etTo"
+                <AutoCompleteTextView
+                    android:id="@+id/acTo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/to" />
+                    android:hint="To"
+                    />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -64,18 +66,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-
-
                 >
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etFrom"
+                <AutoCompleteTextView
+                    android:id="@+id/acFrom"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/from" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:hint="From"
+                    />
+        </com.google.android.material.textfield.TextInputLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.cardview.widget.CardView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

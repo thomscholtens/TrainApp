@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_my_routes.*
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class MyRoutesFragment : Fragment() {
-    private val viewModel: RouteViewModel by viewModels()
+    private val viewModel: RouteViewModel by activityViewModels()
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var routeAdapter: RouteAdapter
 

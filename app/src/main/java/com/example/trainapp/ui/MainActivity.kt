@@ -1,23 +1,33 @@
 package com.example.trainapp.ui
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.example.trainapp.R
+import com.example.trainapp.viewmodel.RouteViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
+    private val viewModel: RouteViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
+        viewModel.getAllStations()
+
 
         navController = findNavController(R.id.nav_host_fragment)
 
@@ -28,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         fabToggler()
+
     }
 
     private fun fabToggler() {
