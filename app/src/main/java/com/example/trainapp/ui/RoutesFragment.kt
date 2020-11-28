@@ -5,12 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
+
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,12 +16,13 @@ import com.example.trainapp.R
 import com.example.trainapp.adapter.RouteAdapter
 import com.example.trainapp.model.Route
 import com.example.trainapp.viewmodel.RouteViewModel
-import kotlinx.android.synthetic.main.fragment_my_routes.*
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.fragment_routes.*
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class MyRoutesFragment : Fragment() {
+class RoutesFragment : Fragment() {
     private val viewModel: RouteViewModel by activityViewModels()
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var routeAdapter: RouteAdapter
@@ -36,7 +35,7 @@ class MyRoutesFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_routes, container, false)
+        return inflater.inflate(R.layout.fragment_routes, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,7 +45,7 @@ class MyRoutesFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        routeAdapter = RouteAdapter(routes, ::onRouteClick)
+        routeAdapter = RouteAdapter(routes, ::onRouteClick, ::onEditClick)
         viewManager = LinearLayoutManager(activity)
         rvRoutes.apply {
             setHasFixedSize(true)
@@ -57,27 +56,30 @@ class MyRoutesFragment : Fragment() {
 
     }
 
+    private fun onEditClick(route: Route) {
+        viewModel.selectEditRoute(route)
+        viewModel.setEditMode(true)
+        findNavController().navigate(R.id.action_myRoutesFragment_to_addRouteFragment)
+    }
+
     private fun onRouteClick(route: Route) {
-        Toast.makeText(
-            activity,
-            route.id.toString(), Toast.LENGTH_SHORT
-        ).show()
+        viewModel.selectRoute(route)
+        viewModel.getTripsFromTo(route.fromStation, route.toStation)
+        findNavController().navigate(
+            R.id.action_myRoutesFragment_to_ridesFragment
+        )
     }
 
     private fun observeRoute() {
-        viewModel.routes.observe(viewLifecycleOwner, Observer { games ->
-            this@MyRoutesFragment.routes.clear()
-            this@MyRoutesFragment.routes.addAll(games)
+        viewModel.routes.observe(viewLifecycleOwner, Observer { routes ->
+            this@RoutesFragment.routes.clear()
+            this@RoutesFragment.routes.addAll(routes)
             routeAdapter.notifyDataSetChanged()
         })
     }
 
     private fun createItemTouchHelper(): ItemTouchHelper {
-        // Callback which is used to create the ItemTouch helper. Only enables left swipe.
-        // Use ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) to also enable right swipe.
         val callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-
-            // Enables or Disables the ability to move items up and down.
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -85,13 +87,15 @@ class MyRoutesFragment : Fragment() {
             ): Boolean {
                 return false
             }
-
-            // Callback triggered when a user swiped an item.
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                val reminderToDelete = routes[position]
-                viewModel.deleteRoute(reminderToDelete)
-
+                val routeToDelete = routes[position]
+                viewModel.deleteRoute(routeToDelete)
+                Snackbar.make(
+                    rvRoutes,
+                    getString(R.string.route_delete_succes),
+                    Snackbar.LENGTH_LONG
+                ).setAction(getString(R.string.undo)) { viewModel.insertRoute(routeToDelete) }.show()
             }
         }
         return ItemTouchHelper(callback)

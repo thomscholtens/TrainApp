@@ -3,13 +3,8 @@ package com.example.trainapp.ui
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.example.trainapp.R
@@ -27,26 +22,22 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
         viewModel.getAllStations()
-
-
         navController = findNavController(R.id.nav_host_fragment)
-
         fab.setOnClickListener {
+            viewModel.setEditMode(false)
             navController.navigate(
                 R.id.action_myRoutesFragment_to_addRouteFragment
             )
         }
-
         fabToggler()
-
     }
 
     private fun fabToggler() {
         navController.addOnDestinationChangedListener { _,       destination, _ ->
-            if (destination.id in arrayOf(R.id.addRouteFragment)) {
-                fab.hide()
-            } else {
+            if (destination.id == R.id.myRoutesFragment) {
                 fab.show()
+            } else {
+                fab.hide()
             }
         }
     }

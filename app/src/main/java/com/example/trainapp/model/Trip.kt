@@ -7,5 +7,6 @@ data class Trip (
     @SerializedName("uid") var uid: String,
     @SerializedName("plannedDurationInMinutes") var plannedDurationInMinutes: Int,
     @SerializedName("actualDurationInMinutes") var actualDurationInMinutes: Int,
-    @SerializedName("legs") var legs: List<Legs>
+    @SerializedName("legs") var legs: List<Legs>,
+    @SerializedName("transfers") var transfers: Int
 )

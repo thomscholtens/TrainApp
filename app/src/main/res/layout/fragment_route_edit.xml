@@ -22,21 +22,21 @@
             android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/btnAddRoute"
+                android:id="@+id/btnEditRoute"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginVertical="16dp"
                 android:backgroundTint="?attr/colorPrimary"
-                android:text="@string/add"
+                android:text="@string/edit"
                 android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tilTo" />
+                app:layout_constraintTop_toBottomOf="@id/tilToEdit" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilTo"
+                android:id="@+id/tilToEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
@@ -47,11 +47,11 @@
 
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tilFrom"
+                app:layout_constraintTop_toBottomOf="@id/tilFromEdit"
                 app:startIconTint="?attr/colorSecondary">
 
                 <AutoCompleteTextView
-                    android:id="@+id/acTo"
+                    android:id="@+id/acToEdit"
                     style="@style/Widget.MaterialComponents.AutoCompleteTextView.FilledBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilFrom"
+                android:id="@+id/tilFromEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
@@ -73,7 +73,7 @@
                 app:startIconTint="?attr/colorSecondary">
 
                 <AutoCompleteTextView
-                    android:id="@+id/acFrom"
+                    android:id="@+id/acFromEdit"
                     style="@style/Widget.MaterialComponents.AutoCompleteTextView.FilledBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

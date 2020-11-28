@@ -7,12 +7,18 @@
 
     <fragment
         android:id="@+id/myRoutesFragment"
-        android:name="com.example.trainapp.ui.MyRoutesFragment"
+        android:name="com.example.trainapp.ui.RoutesFragment"
         android:label="fragment_my_routes"
-        tools:layout="@layout/fragment_my_routes" >
+        tools:layout="@layout/fragment_routes" >
         <action
             android:id="@+id/action_myRoutesFragment_to_addRouteFragment"
             app:destination="@id/addRouteFragment" />
+        <action
+            android:id="@+id/action_myRoutesFragment_to_ridesFragment"
+            app:destination="@id/ridesFragment" />
+        <action
+            android:id="@+id/action_myRoutesFragment_to_routeEditFragment"
+            app:destination="@id/routeEditFragment" />
     </fragment>
     <fragment
         android:id="@+id/addRouteFragment"
@@ -23,4 +29,23 @@
             android:id="@+id/action_addRouteFragment_to_myRoutesFragment"
             app:destination="@id/myRoutesFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/ridesFragment"
+        android:name="com.example.trainapp.ui.TripsFragment"
+        android:label="fragment_rides"
+        tools:layout="@layout/fragment_trips" >
+        <action
+            android:id="@+id/action_ridesFragment_to_tripInfoFragment"
+            app:destination="@id/tripInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/tripInfoFragment"
+        android:name="com.example.trainapp.ui.TripInfoFragment"
+        android:label="fragment_trip_info"
+        tools:layout="@layout/fragment_trip_info" />
+    <fragment
+        android:id="@+id/routeEditFragment"
+        android:name="com.example.trainapp.ui.RouteEditFragment"
+        android:label="fragment_route_edit"
+        tools:layout="@layout/fragment_route_edit" />
 </navigation>
