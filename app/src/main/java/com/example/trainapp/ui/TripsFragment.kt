@@ -5,14 +5,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.trainapp.R
-import com.example.trainapp.adapter.TripAdapter
+import com.example.trainapp.ui.adapter.TripAdapter
 import com.example.trainapp.model.Trip
 import com.example.trainapp.viewmodel.RouteViewModel
 import kotlinx.android.synthetic.main.fragment_trips.*
@@ -29,6 +32,7 @@ class TripsFragment : Fragment() {
     private val viewModel: RouteViewModel by activityViewModels()
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var tripAdapter: TripAdapter
+    private lateinit var swipeRefresh: SwipeRefreshLayout
     private var trips: ArrayList<Trip> = arrayListOf()
 
 
@@ -42,22 +46,28 @@ class TripsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.loading.observe(viewLifecycleOwner, Observer {
-            pbLoading.isVisible = it
-            rvTrips.isVisible = !it
-        })
-        btnLoadMore.setOnClickListener {
-            loadMore()
-        }
+        intView()
+        initSwipeRefresh()
+        initToolBar()
         initRecyclerView()
         observeTrip()
-        intView()
+        observeLoading()
+        observeErrors()
 
     }
 
     private fun intView() {
         tvRide.text = getString(R.string.trips_header, viewModel.selectedRoute.value?.fromStation,
             viewModel.selectedRoute.value?.toStation)
+        btnLoadMore.setOnClickListener {
+            loadMore()
+        }
+    }
+
+    private fun initToolBar() {
+        activity?.title = getString(R.string.trips_title)
+        (activity as AppCompatActivity).supportActionBar?.setDisplayShowHomeEnabled(true)
+        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun loadMore() {
@@ -87,6 +97,30 @@ class TripsFragment : Fragment() {
         findNavController().navigate(
             R.id.action_ridesFragment_to_tripInfoFragment
         )
+    }
+
+    private fun initSwipeRefresh() {
+        swipeRefresh = swiperefresh
+        swipeRefresh.setOnRefreshListener {
+            viewModel.getTripsFromTo(viewModel.selectedRoute.value!!.fromStation, viewModel.selectedRoute.value!!.toStation)
+            viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading ->
+                swipeRefresh.isRefreshing = isLoading
+            })
+        }
+    }
+
+    private fun observeLoading() {
+        viewModel.loading.observe(viewLifecycleOwner, Observer { loading ->
+            pbLoading.isVisible = loading
+            rvTrips.isVisible = !loading
+        })
+    }
+
+    private fun observeErrors() {
+        viewModel.errorText.observe(viewLifecycleOwner, Observer { error ->
+            Toast.makeText(activity, error
+                , Toast.LENGTH_LONG).show()
+        })
     }
 
 }

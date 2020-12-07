@@ -5,7 +5,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class RouteApi {
+class NsApi {
     companion object {
 
         private const val baseUrl = "https://gateway.apiportal.ns.nl/"
@@ -14,6 +14,7 @@ class RouteApi {
          * @return [RouteApiService] The service class off the retrofit client.
          */
         fun createApi(): RouteApiService{
+
             // Create an OkHttpClient to be able to make a log of the network traffic
             val okHttpClient = OkHttpClient.Builder()
                 .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))

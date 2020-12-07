@@ -1,24 +1,22 @@
 package com.example.trainapp.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trainapp.R
-import com.example.trainapp.adapter.LegAdapter
-import com.example.trainapp.adapter.RouteAdapter
-import com.example.trainapp.helpers.TimeFormatter
+import com.example.trainapp.ui.adapter.LegAdapter
 import com.example.trainapp.model.Legs
-import com.example.trainapp.model.Route
-import com.example.trainapp.model.Trip
+import com.example.trainapp.util.TimeHelper
 import com.example.trainapp.viewmodel.RouteViewModel
-import kotlinx.android.synthetic.main.fragment_routes.*
 import kotlinx.android.synthetic.main.fragment_trip_info.*
+
 
 /**
  * A simple [Fragment] subclass.
@@ -45,13 +43,25 @@ class TripInfoFragment : Fragment() {
         initRecyclerView()
         observeLegs()
         initView()
+        initToolBar()
     }
 
     private fun initView() {
         tvTripTransfers.text = viewModel.selectedTrip.value?.transfers.toString()
         tvTripFromTo.text = getString(R.string.trips_header, viewModel.selectedRoute.value!!.fromStation, viewModel.selectedRoute.value?.toStation)
-        tvTripStartTime.text = TimeFormatter.dateTimeToTime(viewModel.selectedTrip.value!!.legs.first().origin.plannedDateTime)
-        tvTripArrivalTime.text = TimeFormatter.dateTimeToTime(viewModel.selectedTrip.value!!.legs.last().destination.plannedDateTime)
+        tvTripStartTime.text = TimeHelper.dateTimeToTime(viewModel.selectedTrip.value!!.legs.first().origin.plannedDateTime)
+        tvTripArrivalTime.text = TimeHelper.dateTimeToTime(viewModel.selectedTrip.value!!.legs.last().destination.plannedDateTime)
+
+        val plannedDuration = viewModel.selectedTrip.value!!.plannedDurationInMinutes
+        val actualDuration = viewModel.selectedTrip.value!!.actualDurationInMinutes
+        val delay = actualDuration - plannedDuration
+        if (delay > 0 ) {
+            tvTripDuration.text = getString(R.string.minute_duration, viewModel.selectedTrip.value?.plannedDurationInMinutes.toString() + " +" + delay.toString())
+            tvTripDuration.setTextColor(resources.getColor(R.color.danger))
+
+        }  else {
+            tvTripDuration.text = getString(R.string.minute_duration, viewModel.selectedTrip.value?.actualDurationInMinutes.toString())
+        }
     }
 
     private fun initRecyclerView() {
@@ -62,6 +72,12 @@ class TripInfoFragment : Fragment() {
             layoutManager = viewManager
             adapter = legAdapter
         }
+    }
+
+    private fun initToolBar() {
+        activity?.title = getString(R.string.trip_info_title)
+        (activity as AppCompatActivity).supportActionBar?.setDisplayShowHomeEnabled(true)
+        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun observeLegs() {

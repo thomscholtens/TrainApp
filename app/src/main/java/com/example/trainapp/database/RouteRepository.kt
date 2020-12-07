@@ -15,7 +15,7 @@ class RouteRepository(context: Context) {
     }
 
     fun getAllRoutes(): LiveData<List<Route>> {
-        return routeDao.getAllRoutes() ?: MutableLiveData(emptyList())
+        return routeDao.getAllRoutes()
     }
 
     suspend fun insertRoute(route: Route) {
@@ -25,7 +25,6 @@ class RouteRepository(context: Context) {
     suspend fun deleteRoute(route: Route) {
         routeDao.deleteRoute(route)
     }
-
 
     suspend fun updateRoute(route: Route) {
         routeDao.updateRoute(route)

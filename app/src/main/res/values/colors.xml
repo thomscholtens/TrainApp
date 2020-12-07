@@ -6,4 +6,5 @@
 
     <color name="myPrimary">#1A237E</color>
     <color name="mySecondary">#FFC107</color>
+    <color name="danger">#CF6679</color>
 </resources>
